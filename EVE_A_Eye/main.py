@@ -11,7 +11,7 @@ Github:
 import os
 import time
 import threading
-from PIL import Image, ImageFile
+from PIL import Image, ImageFile, UnidentifiedImageError
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 import cv2
 from pykeyboard import *
@@ -37,10 +37,14 @@ devices = {                         # 模拟器地址，要开几个预警机就
 mutex = threading.Lock()
 
 
-def setClipboardFile(paths):  
-    im = Image.open(paths)
-    im.save('1.bmp')
-    aString = windll.user32.LoadImageW(0, r"1.bmp", win32con.IMAGE_BITMAP, 0, 0, win32con.LR_LOADFROMFILE)
+def setClipboardFile(paths):
+    try:
+        im = Image.open(paths)
+        im.save('1.bmp')
+        aString = windll.user32.LoadImageW(0, r"1.bmp", win32con.IMAGE_BITMAP, 0, 0, win32con.LR_LOADFROMFILE)
+    except UnidentifiedImageError:
+        setClipboardFile(paths)
+        return
 
     if aString != 0:
         win32clipboard.OpenClipboard()
