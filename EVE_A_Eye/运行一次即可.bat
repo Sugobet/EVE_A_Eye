@@ -6,6 +6,7 @@ pip install Pillow
 pip install pywin32
 pip install uiautomation
 pip install PyAutoGUI
+pip install PyUserInput
 
  pause
  exit
