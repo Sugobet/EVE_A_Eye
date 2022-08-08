@@ -32,7 +32,16 @@ devices = {                         # 模拟器地址，要开几个预警机就
         '127.0.0.1:62001',      # cmd输入adb devices查看模拟器地址
         False       # 没卵用，但不能少也不能改
     ],
-}        
+}
+gameSendPosition = {        # 从聊天框中第二个频道开始数，即系统频道之后为第二频道
+    '第二频道': '38 117',       # 本地 频道
+    '第三频道': '38 170',
+    '第四频道': '38 223',
+    '第五频道': '38 278',
+    '第六频道': '38 332',
+    '第七频道': '38 382'
+}
+sendTo = gameSendPosition['第三频道']       # 默认发送军团频道
 
 mutex = threading.Lock()
 
@@ -158,7 +167,7 @@ def SendGameMassage(tag):
     str1 = f'adb -s {devices[tag][0]} '
     os.system(str1 + 'shell input tap 211 478')
     time.sleep(0.2)
-    os.system(str1 + 'shell input tap 38 170')        # 38 170 像素 军团频道坐标
+    os.system(str1 + f'shell input tap {sendTo}')
     time.sleep(0.2)
     os.system(str1 + 'shell input tap 266 520')
     time.sleep(0.2)
