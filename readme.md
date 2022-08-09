@@ -60,6 +60,15 @@ QQ: 321355478
 
 脚本开源免费，使用前请先查阅readme.md文档
 
-有任何问题请QQ联系，有必要时将会收取一定费用
 
-### 感谢使用，希望能给个Star
+
+### 感谢使用，觉得好用的话，希望能给个Star
+
+
+### 捐赠名单 (按时间排序)
+<img src="http://a1.qpic.cn/psc?/V12Xu6Mm26x6GL/ruAMsa53pVQWN7FLK88i5jVNuhzjJnHl7ojd6hbq*UE8G0jQ1BzCueV*99qhA275MB5ITIwGAHZqYabkfICXe*lcOd9b*VwaMnJB0Soa3FQ!/c&ek=1&kp=1&pt=0&bo=2gScBtoEnAYDEDU!&tl=1&vuin=1749445382&tm=1660014000&dis_t=1660016830&dis_k=0377483ea5dd3499d7266097d58fe6b3&sce=60-2-2&rf=0-0" width="30%">
+<img src="http://a1.qpic.cn/psc?/V12Xu6Mm26x6GL/ruAMsa53pVQWN7FLK88i5jVNuhzjJnHl7ojd6hbq*UHSftihZRfU4QSDMTikpSgT6q9ISwYS*B09oSw*06s7NE0sJdK3DBFo4kowDq5YA4A!/c&ek=1&kp=1&pt=0&bo=OASQBjgEkAYWECA!&t=5&tl=3&vuin=1749445382&tm=1660014000&dis_t=1660016830&dis_k=fd8d61a70b1e3bba2b1a241a0c664653&sce=60-2-2&rf=0-0" width="30%">
+
+>感谢各位老板的捐赠与支持
+
+>1.3v-GEDS死星-天空 -> 14亿isk ---2022.8.8
