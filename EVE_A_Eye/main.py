@@ -198,10 +198,10 @@ def Listening(tag):
                     num += 1
                     print('二次检测')
                     time.sleep(2)
-                    num = 0
                     continue
                 # 防误报  二次检测
 
+                num = 0
                 print(tag + '检测到舰船列表有人', list_mac_v)
                 SendWeChat(tag, 1)
                 i1, i2 = LoadImage(f"{path}/new_{tag}_playerList.png", f"{path}/old_{tag}_playerList.png")
