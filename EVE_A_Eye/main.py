@@ -22,11 +22,11 @@ import win32con
 from ctypes import *
 
 
-wx_groupName = '星月联合舰队'       # 微信群名， 留空则不发微信     请务必将要发送的群或人的这个聊天窗口设置成独立窗口中打开，并且不要最小化
+wx_groupName = '1702366463'       # 微信群名， 留空则不发微信     请务必将要发送的群或人的这个聊天窗口设置成独立窗口中打开，并且不要最小化
 wx_context = '星系警告!!!'        # 要发送的微信消息
 conVal = 0.8        # 阈值：程序执行一遍的间隔时间，单位：秒
 # 路径请勿出现中文
-path = 'C:/Users/sugob/Desktop/evescript/adb_version'        # 脚本目录绝对路径 请将复制过来的路径的反斜杠修改成斜杠！
+path = 'C:/Users/sugob/Desktop/EVE_A_Eye/EVE_A_Eye'        # 脚本目录绝对路径 请将复制过来的路径的反斜杠修改成斜杠！
 devices = {                         # 模拟器地址，要开几个预警机就填对应预警机的模拟器的地址， 照抄
     '3QE': [        # 星系名        请勿出现中文或中文字符以及特殊字符
         '127.0.0.1:62001',      # cmd输入adb devices查看模拟器地址
@@ -64,15 +64,11 @@ def setClipboardFile(paths):
     print('图片载入失败')
 
 
-if wx_groupName != '':
+def send_msg(content, msg_type=1):
     wechatWindow = auto.WindowControl(
         searchDepth=1, Name=f"{wx_groupName}")
     wechatWindow.SetActive()
-    edit = wechatWindow.EditControl(Name='输入')
-    messages = wechatWindow.ListControl(Name='消息')
-
-
-def send_msg(content, msg_type=1):
+    edit = wechatWindow.EditControl()
     if msg_type == 1:
         auto.SetClipboardText(content)
     elif msg_type == 2:
@@ -103,11 +99,6 @@ def Start():
             f.write(con)
             f.close()
 
-    # 自动截图线程
-    for k in devices:
-        t = threading.Thread(target=task, args=(k, ))
-        t.start()
-
     # 监听线程
     for k in devices:
         t = threading.Thread(target=Listening, args=(k, ))
@@ -120,17 +111,8 @@ def Start():
     mutex.release()
 
 
-def screenc(filename):
-    os.system(f'adb -s {devices[filename][0]} exec-out screencap -p > {filename}.png')
-
-
-def task(tag):
-    while True:
-        if devices[tag][1]:
-            time.sleep(0.2)
-            continue
-        screenc(tag)
-        time.sleep(1.5)
+def screenc(filename, num):
+    os.system(f'adb -s {devices[filename][0]} exec-out screencap -p > {filename}_{num}.png')
 
 
 def crop(x1, y1, x2, y2, scFileName, svFileName):
@@ -176,18 +158,20 @@ def SendGameMassage(tag):
     os.system(str1 + 'shell input tap 68 292')
     time.sleep(0.2)
     os.system(str1 + 'shell input tap 250 350')
+    time.sleep(0.2)
     os.system(str1 + 'shell input tap 250 433')
+    time.sleep(0.2)
     os.system(str1 + 'shell input tap 344 190')
     time.sleep(0.2)
     os.system(str1 + 'shell input tap 342 512')
     time.sleep(1)
 
 
-def SendWeChat(tag):
+def SendWeChat(tag, num):
     if wx_groupName == '':
         return
     mutex.acquire()
-    send_msg(f'{path}/{tag}.png', msg_type=3)
+    send_msg(f'{path}/{tag}_{num}.png', msg_type=3)
     context = f"{tag} {wx_context}"
     send_msg(context, msg_type=1)
     mutex.release()
@@ -197,24 +181,29 @@ def Listening(tag):
     # *截图->裁剪->识别->动作（游戏频道发送， 微信发送）
 
     def task2(tag):
+        num = 0
         while True:
+            screenc(tag, 1)
             # 检测舰船列表, 发送 微信
-            devices[tag][1] = True
             time.sleep(0.5)
-            crop(918, 44, 956, 153, f'{path}/{tag}.png', f'new_{tag}_list.png')
-            devices[tag][1] = False
-            time.sleep(1)
+            crop(918, 44, 956, 153, f'{path}/{tag}_1.png', f'new_{tag}_list.png')
             i3, i4 = LoadImage(f"{path}/new_{tag}_list.png", f"{path}/tem/list.png")
             list_status, list_mac_v = IF_Img_I(i3, i4)
 
             if list_mac_v !=0.0 and list_mac_v < 0.10:
                 if wx_groupName == '':
-                    devices[tag][1] = False
                     continue
+                
+                if num < 1:
+                    num += 1
+                    print('二次检测')
+                    time.sleep(2)
+                    num = 0
+                    continue
+                # 防误报  二次检测
 
                 print(tag + '检测到舰船列表有人', list_mac_v)
-                SendWeChat(tag)
-                devices[tag][1] = False
+                SendWeChat(tag, 1)
                 i1, i2 = LoadImage(f"{path}/new_{tag}_playerList.png", f"{path}/old_{tag}_playerList.png")
                 cv2.imwrite(f'{path}/old_{tag}_playerList.png', i1, [cv2.IMWRITE_PNG_COMPRESSION, 0])
                 time.sleep(40)
@@ -224,12 +213,12 @@ def Listening(tag):
     t.start()
 
     while True:
+        continue
+        screenc(tag, 2)
         time.sleep(conVal)
         # 第一次识别后, 判断是否检测舰船列表, 动作结束后将new playerList覆盖掉old
-        devices[tag][1] = True
         time.sleep(0.35)
-        crop(774, 502, 956, 537, f'{path}/{tag}.png', f'new_{tag}_playerList.png')
-        devices[tag][1] = False
+        crop(774, 502, 956, 537, f'{path}/{tag}_2.png', f'new_{tag}_playerList.png')
         i1, i2 = LoadImage(f"{path}/new_{tag}_playerList.png", f"{path}/old_{tag}_playerList.png")
         list_status, list_mac_v = IF_Img_I(i1, i2)
 
@@ -238,13 +227,12 @@ def Listening(tag):
             print(tag, '疑似故障')
             time.sleep(3)
             continue
-        
+            
         # 检测到本地有红白, 发送游戏频道
         if list_status:
             print(tag + '警告')
             SendGameMassage(tag)
             cv2.imwrite(f'{path}/old_{tag}_playerList.png', i1, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-            devices[tag][1] = False
             time.sleep(5)
 
 
