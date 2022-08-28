@@ -213,7 +213,6 @@ def Listening(tag):
     t.start()
 
     while True:
-        continue
         screenc(tag, 2)
         time.sleep(conVal)
         # 第一次识别后, 判断是否检测舰船列表, 动作结束后将new playerList覆盖掉old
